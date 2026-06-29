@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result — Resume JD Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold" href="/">Resume JD Analyzer</a>
+    <div>
+        <a class="btn btn-outline-light btn-sm me-2" href="/">Analyze Another</a>
+        <a class="btn btn-outline-light btn-sm" href="/history">History</a>
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <!-- Match Score Banner -->
+    <div class="card border-0 shadow-sm mb-4 text-center py-4"
+         th:classappend="${result.matchLevel == 'Strong Match'} ? 'bg-success-subtle'
+                       : (${result.matchLevel == 'Partial Match'} ? 'bg-warning-subtle' : 'bg-danger-subtle')">
+        <h2 class="display-4 fw-bold mb-1" th:text="${result.matchScore} + '%'">75%</h2>
+        <span class="badge fs-6 mb-2"
+              th:classappend="${result.matchLevel == 'Strong Match'} ? 'bg-success'
+                            : (${result.matchLevel == 'Partial Match'} ? 'bg-warning text-dark' : 'bg-danger')"
+              th:text="${result.matchLevel}">Match Level</span>
+        <p class="text-muted small mb-0"
+           th:text="'Resume: ' + ${result.resumeFilename} + ' → ' + ${result.jobTitle}"></p>
+    </div>
+
+    <!-- Overall Summary -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold">Overall Summary</h5>
+            <p class="mb-0" th:text="${result.overallSummary}"></p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <!-- Matched Skills -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-success">Matched Skills</h5>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <span th:each="skill : ${matchedSkills}"
+                              class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2"
+                              th:text="${skill}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Missing Skills / Gaps -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-danger">Skill Gaps</h5>
+                    <p class="text-muted small">Skills the JD requires that your resume doesn't clearly show.</p>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <span th:each="skill : ${missingSkills}"
+                              class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2"
+                              th:text="${skill}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rewrite Suggestions -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-4">Resume Rewrite Suggestions</h5>
+
+            <div th:each="suggestion, iter : ${rewriteSuggestions}" class="mb-4">
+                <div class="row g-3">
+
+                    <!-- Original -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-light border-start border-danger border-3">
+                            <div class="text-danger small fw-semibold mb-1">Original</div>
+                            <p class="mb-0 small" th:text="${suggestion['original']}"></p>
+                        </div>
+                    </div>
+
+                    <!-- Suggested -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-light border-start border-success border-3">
+                            <div class="text-success small fw-semibold mb-1">Suggested</div>
+                            <p class="mb-0 small" th:text="${suggestion['suggested']}"></p>
+                        </div>
+                    </div>
+
+                    <!-- Reason -->
+                    <div class="col-12">
+                        <div class="text-muted small">
+                            <strong>Why: </strong>
+                            <span th:text="${suggestion['reason']}"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <hr th:if="${!iter.last}" class="my-3">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex gap-3 justify-content-center">
+        <a href="/" class="btn btn-primary">Analyze Another Resume</a>
+        <a href="/history" class="btn btn-outline-secondary">View All History</a>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

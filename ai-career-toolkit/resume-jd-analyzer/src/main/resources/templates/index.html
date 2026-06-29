@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume JD Analyzer — AI-Powered Match Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold" href="/">
+        Resume JD Analyzer
+    </a>
+    <a class="btn btn-outline-light btn-sm" href="/history">View History</a>
+</nav>
+
+<div class="container py-5">
+
+    <!-- Hero -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">AI-Powered Resume Match Analyzer</h1>
+        <p class="lead text-muted">
+            Upload your resume and a job description — our AI agent analyzes the match,
+            identifies skill gaps, and suggests resume improvements.
+        </p>
+    </div>
+
+    <!-- Error alert -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Upload Form -->
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 720px;">
+        <div class="card-body p-4">
+            <form action="/analyze" method="POST" enctype="multipart/form-data">
+
+                <!-- Resume Upload -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">
+                        Your Resume (PDF)
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input type="file" name="resumeFile" class="form-control"
+                           accept=".pdf" required>
+                    <div class="form-text">Upload your resume as a PDF file (max 10MB)</div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- JD Input — text OR PDF -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Job Description</label>
+                    <p class="text-muted small">Paste the JD text below, or upload a PDF.</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Option 1: Paste JD text</label>
+                    <textarea name="jdText" class="form-control" rows="8"
+                              placeholder="Paste the full job description here..."></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Option 2: Upload JD as PDF</label>
+                    <input type="file" name="jdFile" class="form-control" accept=".pdf">
+                </div>
+
+                <!-- Submit -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Analyze My Resume →
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="row mt-5 g-4 text-center">
+        <div class="col-md-4">
+            <div class="p-3">
+                <div class="fs-1 mb-2">📄</div>
+                <h5>1. Upload</h5>
+                <p class="text-muted small">Upload your resume PDF and paste or upload the job description.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3">
+                <div class="fs-1 mb-2">🔍</div>
+                <h5>2. RAG Analysis</h5>
+                <p class="text-muted small">AI embeds and semantically matches your experience against JD requirements.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3">
+                <div class="fs-1 mb-2">📊</div>
+                <h5>3. Get Report</h5>
+                <p class="text-muted small">Receive a match score, skill gaps, and specific rewrite suggestions.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# Compiled output
+target/
+*.class
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd
+
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local configuration / secrets — never commit real API keys or passwords
+application-local.properties
+application-secrets.properties
+.env
+
+# Uploaded files at runtime (if stored locally)
+uploads/

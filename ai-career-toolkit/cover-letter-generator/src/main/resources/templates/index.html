@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cover Letter Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold" href="/">AI Cover Letter Generator</a>
+    <a class="btn btn-outline-light btn-sm" href="/history">My Letters</a>
+</nav>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Generate a Tailored Cover Letter</h1>
+        <p class="lead text-muted">
+            Upload your resume + paste the job description. Our AI writes a cover letter
+            that mirrors the JD's language and highlights your best matching experience.
+        </p>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger mb-4" th:text="${error}"></div>
+
+    <div class="card shadow-sm border-0 mx-auto" style="max-width:800px;">
+        <div class="card-body p-4">
+            <form action="/generate" method="POST" enctype="multipart/form-data">
+
+                <!-- Section: About You -->
+                <h6 class="fw-bold text-uppercase text-muted small mb-3">About You</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" name="candidateName" class="form-control" placeholder="Shalini R" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="candidateEmail" class="form-control" placeholder="shalini@email.com" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Phone <span class="text-danger">*</span></label>
+                        <input type="text" name="candidatePhone" class="form-control" placeholder="+91 9876543210" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Resume PDF <span class="text-danger">*</span></label>
+                        <input type="file" name="resumeFile" class="form-control" accept=".pdf" required>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Section: Target Role -->
+                <h6 class="fw-bold text-uppercase text-muted small mb-3">Target Role</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                        <input type="text" name="companyName" class="form-control" placeholder="Infosys / TCS / Startup" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Job Title <span class="text-danger">*</span></label>
+                        <input type="text" name="jobTitle" class="form-control" placeholder="Java Developer" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Hiring Manager Name <span class="text-muted small">(optional)</span></label>
+                        <input type="text" name="hiringManagerName" class="form-control" placeholder="Ms. Priya Sharma">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tone</label>
+                        <select name="tone" class="form-select">
+                            <option value="Professional" selected>Professional</option>
+                            <option value="Enthusiastic">Enthusiastic</option>
+                            <option value="Concise">Concise</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Section: Job Description -->
+                <h6 class="fw-bold text-uppercase text-muted small mb-3">Job Description</h6>
+                <div class="mb-3">
+                    <label class="form-label">Paste JD text</label>
+                    <textarea name="jdText" class="form-control" rows="8"
+                              placeholder="Paste the full job description here..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Or upload JD as PDF</label>
+                    <input type="file" name="jdFile" class="form-control" accept=".pdf">
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg" id="submitBtn"
+                            onclick="showLoading()">
+                        Generate My Cover Letter →
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Loading overlay -->
+<div id="loadingOverlay" style="display:none; position:fixed; inset:0; background:rgba(255,255,255,0.9);
+     z-index:9999; align-items:center; justify-content:center; flex-direction:column; gap:1rem;">
+    <div class="spinner-border text-primary" style="width:3rem;height:3rem;"></div>
+    <p class="fw-semibold text-muted">Generating your personalized cover letter...</p>
+    <p class="text-muted small">This usually takes 10–20 seconds</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function showLoading() {
+    setTimeout(() => {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    }, 100);
+}
+</script>
+</body>
+</html>

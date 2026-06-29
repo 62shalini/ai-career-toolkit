@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cover Letter — AI Cover Letter Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold" href="/">AI Cover Letter Generator</a>
+    <div>
+        <a class="btn btn-outline-light btn-sm me-2" href="/">Generate Another</a>
+        <a class="btn btn-outline-light btn-sm" href="/history">My Letters</a>
+    </div>
+</nav>
+
+<div class="container py-5" style="max-width:900px;">
+
+    <!-- Meta info bar -->
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1" th:text="'Cover Letter — ' + ${coverLetter.jobTitle}"></h2>
+            <p class="text-muted mb-0"
+               th:text="${coverLetter.companyName} + ' · ' + ${coverLetter.tone} + ' tone'"></p>
+        </div>
+        <div class="d-flex gap-2">
+            <!-- Copy button -->
+            <button class="btn btn-outline-secondary btn-sm" onclick="copyLetter()">
+                Copy Text
+            </button>
+            <!-- Download PDF -->
+            <a th:href="@{/download/{id}(id=${coverLetter.id})}"
+               class="btn btn-primary btn-sm">
+                Download PDF
+            </a>
+        </div>
+    </div>
+
+    <!-- Cover Letter Display -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-5">
+            <!-- Header mimics a real letter header -->
+            <div class="mb-4 pb-3 border-bottom">
+                <h5 class="fw-bold mb-0" th:text="${coverLetter.candidateName}"></h5>
+                <p class="text-muted small mb-0"
+                   th:text="${coverLetter.candidateEmail} + '  |  ' + ${coverLetter.candidatePhone}"></p>
+            </div>
+
+            <!-- Cover letter body — preserves paragraph structure -->
+            <div id="letterBody" class="letter-body">
+                <p th:each="para : ${#strings.arraySplit(coverLetter.coverLetterText, '&#10;&#10;')}"
+                   th:text="${para}" class="mb-3"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RAG Context used (collapsible — great for showing interviewers how it works) -->
+    <div class="accordion mb-4" id="ragAccordion">
+        <div class="accordion-item border-0 shadow-sm">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-semibold" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#ragContext">
+                    View JD context used by AI (RAG transparency)
+                </button>
+            </h2>
+            <div id="ragContext" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <p class="text-muted small mb-2">
+                        These are the JD sections the AI retrieved as most relevant to your resume
+                        (using semantic similarity). The cover letter mirrors this language.
+                    </p>
+                    <pre class="bg-light p-3 rounded small"
+                         style="white-space: pre-wrap; word-wrap: break-word;"
+                         th:text="${coverLetter.jdContextUsed}"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-3">
+        <a href="/" class="btn btn-primary">Generate Another</a>
+        <a href="/history" class="btn btn-outline-secondary">View All Letters</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function copyLetter() {
+    const text = document.getElementById('letterBody').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy Text', 2000);
+    });
+}
+</script>
+</body>
+</html>
